@@ -6,6 +6,18 @@ GET http://localhost:3000/ad
 ### GET By ID
 GET http://localhost:3000/ad/3
 
+### Get Clothes
+GET http://localhost:3000/ad-clothes
+
+### Get Clothes And Cars
+GET http://localhost:3000/ad-clothes-and-cars
+
+### Get Avg from other
+GET http://localhost:3000/avg-price-other
+
+### Get Ad starting by v
+GET http://localhost:3000/ad-start-by-v
+
 ### POST
 POST http://localhost:3000/ad
 Content-Type: application/json
@@ -35,4 +47,4 @@ Content-Type: application/json
 }
 
 ### DELETE By ID
-DELETE http://localhost:3000/ad/3
+DELETE http://localhost:3000/ad/21

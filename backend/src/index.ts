@@ -10,32 +10,32 @@ const port: number = 3000;
 
 const db = new sqlite3.Database("good_corner.sqlite");
 
-const ads: Ad[] = [
-  {
-    id: 1,
-    title: "Bike to sell",
-    description:
-      "My bike is blue, working fine. I'm selling it because I've got a new one",
-    owner: "bike.seller@gmail.com",
-    price: 100,
-    picture:
-      "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
-    location: "Paris",
-    createdAt: "2023-09-05T10:13:14.755Z",
-  },
-  {
-    id: 2,
-    title: "Car to sell",
-    description:
-      "My car is blue, working fine. I'm selling it because I've got a new one",
-    owner: "car.seller@gmail.com",
-    price: 10000,
-    picture:
-      "https://www.automobile-magazine.fr/asset/cms/34973/config/28294/apres-plusieurs-prototypes-la-bollore-bluecar-a-fini-par-devoiler-sa-version-definitive.jpg",
-    location: "Paris",
-    createdAt: "2023-10-05T10:14:15.922Z",
-  },
-];
+// const ads: Ad[] = [
+//   {
+//     id: 1,
+//     title: "Bike to sell",
+//     description:
+//       "My bike is blue, working fine. I'm selling it because I've got a new one",
+//     owner: "bike.seller@gmail.com",
+//     price: 100,
+//     picture:
+//       "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
+//     location: "Paris",
+//     createdAt: "2023-09-05T10:13:14.755Z",
+//   },
+//   {
+//     id: 2,
+//     title: "Car to sell",
+//     description:
+//       "My car is blue, working fine. I'm selling it because I've got a new one",
+//     owner: "car.seller@gmail.com",
+//     price: 10000,
+//     picture:
+//       "https://www.automobile-magazine.fr/asset/cms/34973/config/28294/apres-plusieurs-prototypes-la-bollore-bluecar-a-fini-par-devoiler-sa-version-definitive.jpg",
+//     location: "Paris",
+//     createdAt: "2023-10-05T10:14:15.922Z",
+//   },
+// ];
 
 // GET
 app.get("/", (req: Request, res: Response) => {
@@ -58,6 +58,40 @@ app.get("/ad/:id", (req: Request, res: Response) => {
   db.get("SELECT * from ad WHERE id = ?", [id], (err, row) => {
     res.send(row);
   });
+});
+
+// get ad from clothes category
+app.get("/ad-clothes", (req: Request, res: Response) => {
+  db.all("SELECT * FROM ad WHERE category_id = 1", (err, rows) => {
+    res.send(rows);
+  });
+});
+
+// get ad from clothe and car category
+app.get("/ad-clothes-and-cars", (req: Request, res: Response) => {
+  db.all(
+    "SELECT * FROM ad WHERE category_id = 1 OR category_id = 2",
+    (err, rows) => {
+      res.send(rows);
+    }
+  );
+});
+
+// get avg price from other category
+app.get("/avg-price-other", (req: Request, res: Response) => {
+  db.all("SELECT AVG(price) FROM ad WHERE category_id = 3", (err, rows) => {
+    res.send(rows);
+  });
+});
+
+// get ad from category starting by V
+app.get("/ad-start-by-v", (req: Request, res: Response) => {
+  db.all(
+    "SELECT * FROM ad INNER JOIN category AS c ON ad.category_id = c.id WHERE c.name LIKE 'v%'",
+    (err, rows) => {
+      res.send(rows);
+    }
+  );
 });
 
 // POST
