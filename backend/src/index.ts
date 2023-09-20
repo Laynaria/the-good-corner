@@ -1,11 +1,14 @@
 import express, { Request, Response, response } from "express";
 import { Ad } from "./types/ad";
+import sqlite3 from "sqlite3";
 
 const app = express();
 
 app.use(express.json());
 
 const port: number = 3000;
+
+const db = new sqlite3.Database("good_corner.sqlite");
 
 const ads: Ad[] = [
   {
@@ -45,7 +48,7 @@ app.get("/ad", (req: Request, res: Response) => {
 
 app.get("/ad/:id", (req: Request, res: Response) => {
   // pas bon pour l'incrémentation sans doute find
-  const id = parseInt(req.params.id);
+  const id: number = parseInt(req.params.id);
   res.send(ads[ads.findIndex((ad) => ad.id === id)]);
 });
 
