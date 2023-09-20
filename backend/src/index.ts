@@ -143,9 +143,13 @@ app.delete("/ad/:id", (req: Request, res: Response) => {
 
   const id: number = parseInt(req.params.id);
 
-  ads.splice(ads.findIndex((ad) => ad.id === id));
+  // ads.splice(ads.findIndex((ad) => ad.id === id));
 
-  res.send(ads);
+  // res.send(ads);
+
+  db.run("DELETE from ad where id = ?", id);
+
+  res.sendStatus(204);
 });
 
 app.listen(port, () => {
