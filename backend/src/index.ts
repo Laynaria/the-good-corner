@@ -52,7 +52,12 @@ app.get("/ad", (req: Request, res: Response) => {
 app.get("/ad/:id", (req: Request, res: Response) => {
   // pas bon pour l'incrémentation sans doute find
   const id: number = parseInt(req.params.id);
-  res.send(ads[ads.findIndex((ad) => ad.id === id)]);
+
+  // res.send(ads[ads.findIndex((ad) => ad.id === id)]);
+
+  db.get("SELECT * from ad WHERE id = ?", [id], (err, row) => {
+    res.send(row);
+  });
 });
 
 // POST
@@ -62,13 +67,19 @@ app.post("/ad", (req: Request, res: Response) => {
 
   const ids: number[] = ads.map<number>((ad) => ad.id);
 
-  const ad: Ad = {
-    id: Math.max(...ids) + 1,
-    ...req.body,
-  };
+  // const ad: Ad = {
+  //   id: Math.max(...ids) + 1,
+  //   ...req.body,
+  // };
 
-  ads.push(ad);
-  res.send(ads);
+  // ads.push(ad);
+  // res.send(ads);
+
+  const stmt = db.prepare(
+    "INSERT INTO ad (title, description, owner, price, picture, location, createdAt, category_id) VALUES (?, ?, ?, ?, ?, ?, ? ,?)"
+  );
+
+  stmt.run([req.body.title]);
 });
 
 // PUT By Id
