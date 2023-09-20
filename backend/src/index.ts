@@ -43,7 +43,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/ad", (req: Request, res: Response) => {
-  res.send(ads);
+  // res.send(ads);
+  db.all("SELECT * from ad", (err, rows) => {
+    res.send(rows);
+  });
 });
 
 app.get("/ad/:id", (req: Request, res: Response) => {
