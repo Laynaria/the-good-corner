@@ -65,7 +65,7 @@ app.post("/ad", (req: Request, res: Response) => {
   // ads.push(req.body);
   // res.send("Request received, check the backend terminal!");
 
-  const ids: number[] = ads.map<number>((ad) => ad.id);
+  // const ids: number[] = ads.map<number>((ad) => ad.id);
 
   // const ad: Ad = {
   //   id: Math.max(...ids) + 1,
@@ -75,11 +75,24 @@ app.post("/ad", (req: Request, res: Response) => {
   // ads.push(ad);
   // res.send(ads);
 
+  const body = req.body;
+
   const stmt = db.prepare(
     "INSERT INTO ad (title, description, owner, price, picture, location, createdAt, category_id) VALUES (?, ?, ?, ?, ?, ?, ? ,?)"
   );
 
-  stmt.run([req.body.title]);
+  stmt.run([
+    body.title,
+    body.description,
+    body.owner,
+    body.price,
+    body.picture,
+    body.location,
+    new Date(),
+    body.category_id,
+  ]);
+
+  res.send("ok");
 });
 
 // PUT By Id
@@ -91,15 +104,34 @@ app.put("/ad/:id", (req: Request, res: Response) => {
 
   const id: number = parseInt(req.params.id);
 
-  const newAds: Ad[] = ads.map<Ad>((ad) => {
-    if (ad.id === id) {
-      return { ...ad, ...req.body };
-    }
+  // const newAds: Ad[] = ads.map<Ad>((ad) => {
+  //   if (ad.id === id) {
+  //     return { ...ad, ...req.body };
+  //   }
 
-    return ad;
-  });
+  //   return ad;
+  // });
 
-  res.send(newAds);
+  // res.send(newAds);
+
+  const body = req.body;
+
+  const stmt = db.prepare(
+    "UPDATE ad SET title = ?, description = ?, owner = ?, price = ?, picture = ?, location = ?, category_id = ? where id = ?"
+  );
+
+  stmt.run([
+    body.title,
+    body.description,
+    body.owner,
+    body.price,
+    body.picture,
+    body.location,
+    body.category_id,
+    id,
+  ]);
+
+  res.send("Ok");
 });
 
 // DELETE
