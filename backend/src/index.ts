@@ -84,34 +84,32 @@ app.post("/ad", (req: Request, res: Response) => {
 });
 
 // PUT By Id
-app.put("/ad/:id", (req: Request, res: Response) => {
+app.put("/ad/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
-
   const body = req.body;
 
-  const stmt = db.prepare(
-    "UPDATE ad SET title = ?, description = ?, owner = ?, price = ?, picture = ?, location = ?, category_id = ? where id = ?"
-  );
+  const ad = await Ad.findOneBy({ id });
 
-  stmt.run([
-    body.title,
-    body.description,
-    body.owner,
-    body.price,
-    body.picture,
-    body.location,
-    body.category_id,
-    id,
-  ]);
+  if (ad) {
+    ad.title = body.title;
+    ad.description = body.description;
+    ad.owner = body.owner;
+    ad.price = body.price;
+    ad.picture = body.picture;
+    ad.location = body.location;
+    ad.save();
+    res.send(ad);
+    return;
+  }
 
-  res.send("Ok");
+  res.sendStatus(404);
 });
 
 // DELETE
-app.delete("/ad/:id", (req: Request, res: Response) => {
+app.delete("/ad/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  db.run("DELETE from ad where id = ?", id);
+  await Ad.delete({ id: id });
 
   res.sendStatus(204);
 });

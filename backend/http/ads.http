@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### PUT By ID
-PUT http://localhost:3000/ad/3
+PUT http://localhost:3000/ad/21
 Content-Type: application/json
 
 {
