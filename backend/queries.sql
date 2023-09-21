@@ -63,9 +63,12 @@ SELECT AVG(price), location FROM ad GROUP BY location;
 -- Part 2
 
 SELECT * FROM ad WHERE category_id = 1;
+SELECT * FROM ad INNER JOIN category AS c ON ad.category_id = c.id WHERE c.name = 'vêtement';
 
 SELECT * FROM ad WHERE category_id = 1 OR category_id = 2;
+SELECT * FROM ad INNER JOIN category AS c ON ad.category_id = c.id WHERE c.name = 'vêtement' OR c.name = 'voiture';
 
 SELECT AVG(price) FROM ad WHERE category_id = 3;
+SELECT AVG(price), c.name FROM ad INNER JOIN category AS c ON ad.category_id = c.id WHERE c.name = 'autre';
 
 SELECT * FROM ad INNER JOIN category AS c ON ad.category_id = c.id WHERE c.name LIKE 'v%';
