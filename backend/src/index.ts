@@ -70,22 +70,17 @@ app.get("/ad-start-by-v", (req: Request, res: Response) => {
 app.post("/ad", (req: Request, res: Response) => {
   const body = req.body;
 
-  const stmt = db.prepare(
-    "INSERT INTO ad (title, description, owner, price, picture, location, createdAt, category_id) VALUES (?, ?, ?, ?, ?, ?, ? ,?)"
-  );
+  const ad = new Ad();
+  ad.title = body.title;
+  ad.description = body.description;
+  ad.owner = body.owner;
+  ad.price = body.price;
+  ad.picture = body.picture;
+  ad.location = body.location;
+  ad.createdAt = new Date();
+  ad.save();
 
-  stmt.run([
-    body.title,
-    body.description,
-    body.owner,
-    body.price,
-    body.picture,
-    body.location,
-    new Date(),
-    body.category_id,
-  ]);
-
-  res.send("ok");
+  res.send(ad);
 });
 
 // PUT By Id
