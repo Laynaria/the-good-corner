@@ -1,6 +1,8 @@
-import express, { Request, Response, response } from "express";
-import { Ad } from "./types/ad";
+import "reflect-metadata";
+import express, { Request, Response } from "express";
 import sqlite3 from "sqlite3";
+import { dataSource } from "./config/db";
+import { Ad } from "./entities/ad";
 
 const app = express();
 
@@ -11,19 +13,17 @@ const port: number = 3000;
 const db = new sqlite3.Database("good_corner.sqlite");
 
 // Get ALL
-app.get("/ad", (req: Request, res: Response) => {
-  db.all("SELECT * from ad", (err, rows) => {
-    res.send(rows);
-  });
+app.get("/ad", async (req: Request, res: Response) => {
+  const ad = await Ad.find();
+  res.send(ad);
 });
 
 // Get By ID
-app.get("/ad/:id", (req: Request, res: Response) => {
+app.get("/ad/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  db.get("SELECT * from ad WHERE id = ?", [id], (err, row) => {
-    res.send(row);
-  });
+  const ad = await Ad.findOneBy({ id });
+  res.send(ad);
 });
 
 // get ad from clothes category
@@ -121,6 +121,7 @@ app.delete("/ad/:id", (req: Request, res: Response) => {
   res.sendStatus(204);
 });
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  await dataSource.initialize();
   console.log(`Example app listening on port ${port}`);
 });

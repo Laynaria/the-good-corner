@@ -1,6 +1,4 @@
-GET http://localhost:3000/
-
-### GET
+### GET ALL
 GET http://localhost:3000/ad
 
 ### GET By ID
