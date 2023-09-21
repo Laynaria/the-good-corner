@@ -7,4 +7,5 @@ export type Ad = {
   picture: string;
   location: string;
   createdAt: string;
+  cateogry_id: number;
 };
