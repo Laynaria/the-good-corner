@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Category } from "./category";
 
 @Entity()
 export class Ad extends BaseEntity {
@@ -25,6 +32,7 @@ export class Ad extends BaseEntity {
 
   @Column()
   createdAt: Date;
-}
 
-//     cateogry_id: number;
+  @ManyToOne(() => Category)
+  category: Category;
+}
