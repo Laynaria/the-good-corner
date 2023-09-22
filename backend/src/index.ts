@@ -14,7 +14,11 @@ const db = new sqlite3.Database("good_corner.sqlite");
 
 // Get ALL
 app.get("/ad", async (req: Request, res: Response) => {
-  const ad = await Ad.find();
+  const ad = await Ad.find({
+    relations: {
+      category: true,
+    },
+  });
   res.send(ad);
 });
 
@@ -22,7 +26,12 @@ app.get("/ad", async (req: Request, res: Response) => {
 app.get("/ad/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  const ad = await Ad.findOneBy({ id });
+  const ad = await Ad.findOne({
+    relations: {
+      category: true,
+    },
+    where: { id: id },
+  });
   res.send(ad);
 });
 
