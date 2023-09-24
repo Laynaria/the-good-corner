@@ -1,8 +1,10 @@
 import "reflect-metadata";
 import express, { Request, Response } from "express";
 import sqlite3 from "sqlite3";
+import { Like } from "typeorm";
 import { dataSource } from "./config/db";
 import { Ad } from "./entities/ad";
+import { Category } from "./entities/category";
 
 const app = express();
 
@@ -14,7 +16,24 @@ const db = new sqlite3.Database("good_corner.sqlite");
 
 // Get ALL
 app.get("/ad", async (req: Request, res: Response) => {
-  const ad = await Ad.find({
+  const categoryId: number = parseInt(req.query.categoryId as string);
+
+  let ad: Ad[];
+  if (categoryId) {
+    ad = await Ad.find({
+      relations: {
+        category: true,
+      },
+      where: {
+        category: {
+          id: categoryId,
+        },
+      },
+    });
+    return res.send(ad);
+  }
+
+  ad = await Ad.find({
     relations: {
       category: true,
     },
@@ -76,7 +95,7 @@ app.get("/ad-start-by-v", (req: Request, res: Response) => {
 });
 
 // POST
-app.post("/ad", (req: Request, res: Response) => {
+app.post("/ad", async (req: Request, res: Response) => {
   const body = req.body;
 
   const ad = new Ad();
@@ -87,6 +106,13 @@ app.post("/ad", (req: Request, res: Response) => {
   ad.picture = body.picture;
   ad.location = body.location;
   ad.createdAt = new Date();
+
+  const category = await Category.findOneBy({ id: req.body.category_id });
+
+  if (category) {
+    ad.category = category;
+  }
+
   ad.save();
 
   res.send(ad);
@@ -106,6 +132,13 @@ app.put("/ad/:id", async (req: Request, res: Response) => {
     ad.price = body.price;
     ad.picture = body.picture;
     ad.location = body.location;
+
+    const category = await Category.findOneBy({ id: req.body.category_id });
+
+    if (category) {
+      ad.category = category;
+    }
+
     ad.save();
     res.send(ad);
     return;
@@ -121,6 +154,17 @@ app.delete("/ad/:id", async (req: Request, res: Response) => {
   await Ad.delete({ id: id });
 
   res.sendStatus(204);
+});
+
+// get categories
+
+app.get("/categories", async (req: Request, res: Response) => {
+  const terms = req.query.terms;
+
+  const categories = await Category.find({
+    where: { name: Like(`%${terms}%`) },
+  });
+  res.send(categories);
 });
 
 app.listen(port, async () => {

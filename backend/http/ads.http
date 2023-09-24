@@ -1,5 +1,5 @@
 ### GET ALL
-GET http://localhost:3000/ad
+GET http://localhost:3000/ad?categoryId=1
 
 ### GET By ID
 GET http://localhost:3000/ad/3
@@ -46,3 +46,6 @@ Content-Type: application/json
 
 ### DELETE By ID
 DELETE http://localhost:3000/ad/21
+
+### Get Categories
+GET http://localhost:3000/categories?terms=vê
