@@ -26,7 +26,7 @@ INSERT INTO category (name) VALUES
 ('voiture'),
 ('autre');
 
-INSERT INTO ad (title, description, owner, price, picture, location, createdAt, category_id) VALUES
+INSERT INTO ad (title, description, owner, price, picture, location, createdAt, categoryId) VALUES
 ('Rollers', 'Not sure they can be used anymore, have fun with them', 'car@car.fr', 10, 'https://lien.com', 'Bordeaux', '2023-9-01', 3),
 ('Skate', 'I bought this skate with Tony Hawks signature, ', 'test@test.fr', 5800, 'https://lien.com', 'Paris', '2023-9-01', 3),
 ('Red Bike', 'Electric Red Bike to sold.', 'machin@machin.fr', 500, 'https://lien.com', 'Lyon', '2023-9-01', 3),

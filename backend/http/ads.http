@@ -1,5 +1,5 @@
 ### GET ALL
-GET http://localhost:3000/ad?categoryId=1
+GET http://localhost:3000/ad?categoryId=3
 
 ### GET By ID
 GET http://localhost:3000/ad/3
