@@ -18,8 +18,22 @@ const db = new sqlite3.Database("good_corner.sqlite");
 // Get ALL
 app.get("/ad", async (req: Request, res: Response) => {
   const categoryId: number = parseInt(req.query.categoryId as string);
+  const tagName: string = req.query.tag as string;
 
   let ad: Ad[];
+
+  if (tagName) {
+    ad = await Ad.find({
+      relations: {
+        tags: true,
+      },
+      where: {
+        tags: { name: tagName },
+      },
+    });
+    return res.send(ad);
+  }
+
   if (categoryId) {
     ad = await Ad.find({
       relations: {
@@ -37,6 +51,7 @@ app.get("/ad", async (req: Request, res: Response) => {
   ad = await Ad.find({
     relations: {
       category: true,
+      tags: true,
     },
   });
   res.send(ad);
@@ -49,6 +64,7 @@ app.get("/ad/:id", async (req: Request, res: Response) => {
   const ad = await Ad.findOne({
     relations: {
       category: true,
+      tags: true,
     },
     where: { id: id },
   });
@@ -114,8 +130,8 @@ app.post("/ad", async (req: Request, res: Response) => {
     ad.category = category;
   }
 
-  const tagsName = req.body.tags;
-  if (tagsName && tagsName.lenght > 0) {
+  const tagsName = body.tags;
+  if (tagsName && tagsName.length > 0) {
     const tagsEntities: Tag[] = [];
 
     for (const tagName of tagsName) {
@@ -158,8 +174,8 @@ app.put("/ad/:id", async (req: Request, res: Response) => {
       ad.category = category;
     }
 
-    const tagsName = req.body.tags;
-    if (tagsName && tagsName.lenght > 0) {
+    const tagsName = body.tags;
+    if (tagsName && tagsName.length > 0) {
       const tagsEntities: Tag[] = [];
 
       for (const tagName of tagsName) {
