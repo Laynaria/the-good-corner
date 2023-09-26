@@ -22,6 +22,22 @@ app.get("/ad", async (req: Request, res: Response) => {
 
   let ad: Ad[];
 
+  if (tagName && categoryId) {
+    ad = await Ad.find({
+      relations: {
+        category: true,
+        tags: true,
+      },
+      where: {
+        tags: { name: tagName },
+        category: {
+          id: categoryId,
+        },
+      },
+    });
+    return res.send(ad);
+  }
+
   if (tagName) {
     ad = await Ad.find({
       relations: {
