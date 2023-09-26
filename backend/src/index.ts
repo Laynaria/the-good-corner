@@ -214,6 +214,15 @@ app.get("/tags", async (req: Request, res: Response) => {
   res.send(tags);
 });
 
+// delete tags
+app.delete("/tags/:id", async (req: Request, res: Response) => {
+  const id: number = parseInt(req.params.id);
+
+  await Tag.delete({ id: id });
+
+  res.sendStatus(204);
+});
+
 app.listen(port, async () => {
   await dataSource.initialize();
   console.log(`Example app listening on port ${port}`);
