@@ -5,6 +5,7 @@ import { Like } from "typeorm";
 import { dataSource } from "./config/db";
 import { Ad } from "./entities/ad";
 import { Category } from "./entities/category";
+import { Tag } from "./entities/tag";
 
 const app = express();
 
@@ -113,6 +114,24 @@ app.post("/ad", async (req: Request, res: Response) => {
     ad.category = category;
   }
 
+  const tagsName = req.body.tags;
+  if (tagsName && tagsName.lenght > 0) {
+    const tagsEntities: Tag[] = [];
+
+    for (const tagName of tagsName) {
+      let tag = await Tag.findOneBy({ name: tagName });
+
+      if (!tag) {
+        tag = new Tag();
+        tag.name = tagName;
+      }
+
+      tagsEntities.push(tag);
+    }
+
+    ad.tags = tagsEntities;
+  }
+
   ad.save();
 
   res.send(ad);
@@ -137,6 +156,24 @@ app.put("/ad/:id", async (req: Request, res: Response) => {
 
     if (category) {
       ad.category = category;
+    }
+
+    const tagsName = req.body.tags;
+    if (tagsName && tagsName.lenght > 0) {
+      const tagsEntities: Tag[] = [];
+
+      for (const tagName of tagsName) {
+        let tag = await Tag.findOneBy({ name: tagName });
+
+        if (!tag) {
+          tag = new Tag();
+          tag.name = tagName;
+        }
+
+        tagsEntities.push(tag);
+      }
+
+      ad.tags = tagsEntities;
     }
 
     ad.save();
