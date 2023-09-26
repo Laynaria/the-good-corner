@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 
-const port: number = 3000;
+const port: number = 5000;
 
 const db = new sqlite3.Database("good_corner.sqlite");
 
@@ -202,6 +202,16 @@ app.get("/categories", async (req: Request, res: Response) => {
     where: { name: Like(`%${terms}%`) },
   });
   res.send(categories);
+});
+
+// get tags
+app.get("/tags", async (req: Request, res: Response) => {
+  const terms = req.query.terms;
+
+  const tags = await Tag.find({
+    where: { name: Like(`%${terms}%`) },
+  });
+  res.send(tags);
 });
 
 app.listen(port, async () => {
