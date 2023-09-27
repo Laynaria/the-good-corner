@@ -16,7 +16,7 @@ const NewAd = () => {
     fetchCategories();
   }, []);
 
-  const onFormSubmit = (e) => {
+  const onFormSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     const form = e.target;
