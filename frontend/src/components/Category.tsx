@@ -9,7 +9,10 @@ type CategoryProps = {
 const Category = ({ category, max }: CategoryProps) => {
   return (
     <>
-      <Link href={`/${category.id}`} className="category-navigation-link">
+      <Link
+        href={`/?category=${category.id}`}
+        className="category-navigation-link"
+      >
         {category.name}
       </Link>
       {max !== category.id ? "•" : ""}

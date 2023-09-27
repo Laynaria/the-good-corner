@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import AdCard from "./AdCard";
 import axios from "axios";
 import { Ad } from "@/types/ad.type";
+import { useSearchParams } from "next/navigation";
 
 const RecentAds = () => {
   const [totalPrice, setTotalePrice] = useState<number>(0);
 
   const [ads, setAds] = useState<Ad[]>([]);
+
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category");
 
   const handleClickPrice = (price: number) => {
     setTotalePrice(totalPrice + price);
@@ -15,7 +19,9 @@ const RecentAds = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/ad");
+        const res = await axios.get(
+          `http://localhost:5000/ad?categoryId=${categoryId}`
+        );
         setAds(res.data);
       } catch (err) {
         console.log("error", err);
@@ -23,7 +29,7 @@ const RecentAds = () => {
     };
 
     fetchData();
-  }, []);
+  }, [categoryId]);
 
   return (
     <>
@@ -35,7 +41,7 @@ const RecentAds = () => {
             <AdCard
               imgUrl={ad.picture}
               price={ad.price}
-              link={`/ads/${ad.id}`}
+              link={`/ad/${ad.id}`}
               title={ad.title}
             />
 

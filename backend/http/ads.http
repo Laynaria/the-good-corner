@@ -5,7 +5,10 @@ GET http://localhost:5000/ad
 GET http://localhost:5000/ad?tag=voiture
 
 ### GET ALL
-GET http://localhost:5000/ad?cagoryId=3&tag=bike
+GET http://localhost:5000/ad?categoryId=3&tag=bike
+
+### GET ALL
+GET http://localhost:5000/ad?categoryId=2
 
 ### GET By ID
 GET http://localhost:5000/ad/21
