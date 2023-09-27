@@ -26,6 +26,10 @@ INSERT INTO category (name) VALUES
 ('voiture'),
 ('autre');
 
+INSERT INTO category (name) VALUES
+('outil'),
+('décoration');
+
 INSERT INTO tag (name) VALUES
 ('voiture'),
 ('skate'),

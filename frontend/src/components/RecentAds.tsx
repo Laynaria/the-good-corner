@@ -3,6 +3,7 @@ import AdCard from "./AdCard";
 import axios from "axios";
 import { Ad } from "@/types/ad.type";
 import { useSearchParams } from "next/navigation";
+import styles from "@/styles/RecentAds.module.css";
 
 const RecentAds = () => {
   const [totalPrice, setTotalePrice] = useState<number>(0);
@@ -35,7 +36,7 @@ const RecentAds = () => {
     <>
       <h2>Annonces récentes</h2>
       <p>Total Price: {totalPrice} €</p>
-      <section className="recent-ads">
+      <section className={styles.recentAds}>
         {ads.map((ad, index) => (
           <div key={index}>
             <AdCard
