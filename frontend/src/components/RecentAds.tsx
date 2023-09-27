@@ -1,56 +1,51 @@
-import AdCard, { AdCardProps } from "./AdCard";
+import { useState, useEffect } from "react";
+import AdCard from "./AdCard";
+import axios from "axios";
+import { Ad } from "@/types/ad.type";
 
 const RecentAds = () => {
-  const ads: AdCardProps[] = [
-    {
-      title: "Table",
-      price: 120,
-      imgUrl: "/images/table.webp",
-      link: "/ad/table",
-    },
-    {
-      title: "Dame-jeanne",
-      price: 75,
-      imgUrl: "/images/dame-jeanne.webp",
-      link: "/ad/dame-jeanne",
-    },
-    {
-      title: "Vide-poche",
-      price: 4,
-      imgUrl: "/images/vide-poche.webp",
-      link: "/ad/vide-poche",
-    },
-    {
-      title: "Vaisselier",
-      price: 900,
-      imgUrl: "/images/vaisselier.webp",
-      link: "/ad/vaisseliere",
-    },
-    {
-      title: "Bougie",
-      price: 8,
-      imgUrl: "/images/bougie.webp",
-      link: "/ad/bougie",
-    },
-    {
-      title: "Porte-magazine",
-      price: 45,
-      imgUrl: "/images/porte-magazine.webp",
-      link: "/ad/porte-magazine",
-    },
-  ];
+  const [totalPrice, setTotalePrice] = useState<number>(0);
+
+  const [ads, setAds] = useState<Ad[]>([]);
+
+  const handleClickPrice = (price: number) => {
+    setTotalePrice(totalPrice + price);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/ad");
+        setAds(res.data);
+      } catch (err) {
+        console.log("error", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <h2>Annonces récentes</h2>
+      <p>Total Price: {totalPrice} €</p>
       <section className="recent-ads">
-        {ads.map((ad) => (
-          <AdCard
-            imgUrl={ad.imgUrl}
-            price={ad.price}
-            link={ad.link}
-            title={ad.title}
-            key={ad.title}
-          />
+        {ads.map((ad, index) => (
+          <div key={index}>
+            <AdCard
+              imgUrl={ad.picture}
+              price={ad.price}
+              link={`/ads/${ad.id}`}
+              title={ad.title}
+            />
+
+            <button
+              className="button"
+              onClick={() => handleClickPrice(ad.price)}
+            >
+              Add price to Total
+            </button>
+          </div>
         ))}
       </section>
     </>

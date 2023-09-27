@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import express, { Request, Response } from "express";
 import sqlite3 from "sqlite3";
+import cors from "cors";
 import { Like } from "typeorm";
 import { dataSource } from "./config/db";
 import { Ad } from "./entities/ad";
@@ -9,6 +10,11 @@ import { Tag } from "./entities/tag";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json());
 
 const port: number = 5000;
