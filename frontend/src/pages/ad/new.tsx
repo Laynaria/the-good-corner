@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Category } from "@/types/category.type";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const NewAd = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -16,15 +18,17 @@ const NewAd = () => {
     fetchCategories();
   }, []);
 
-  const onFormSubmit = (e: React.SyntheticEvent) => {
+  const onFormSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     const form = e.target;
     const formData = new FormData(form as HTMLFormElement);
 
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
+    await axios.post("http://localhost:5000/ad", formJson);
+    router.push("/");
   };
+
   return (
     <form onSubmit={onFormSubmit}>
       <label>
@@ -63,7 +67,7 @@ const NewAd = () => {
       <br />
 
       <label>
-        <select name="category">
+        <select name="category_id">
           {categories.map((category) => (
             <option value={category.id} key={category.id}>
               {category.name}
