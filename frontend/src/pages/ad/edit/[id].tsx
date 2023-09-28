@@ -33,9 +33,14 @@ const NewAd = () => {
     fetchCategories();
   }, []);
 
-  const onFormChange = async (e: React.SyntheticEvent) => {
+  const onFormChange = async (
+    e: React.ChangeEvent<
+      HTMLSelectElement | HTMLTextAreaElement | HTMLInputElement
+    >
+  ) => {
     const { name, value } = e.target;
-    await setAd({ ...ad, [name]: value });
+    await setAd({ ...ad, [name]: value } as Ad);
+    // as Ad = ce sera forcément une Ad > fait moi confiance frère.
   };
 
   const onFormSubmit = async (e: React.SyntheticEvent) => {
