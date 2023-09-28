@@ -21,12 +21,16 @@ const AdDetailComponent = () => {
   }, [id]);
 
   const handleEdit = () => {
-    router.push(`/ad/edit/${id}`);
+    if (ad) {
+      router.push(`/ad/edit/${ad.id}`);
+    }
   };
 
   const handleClick = async () => {
-    await axios.delete(`http://localhost:5000/ad/${id}`);
-    router.push("/");
+    if (ad) {
+      await axios.delete(`http://localhost:5000/ad/${ad.id}`);
+      router.push("/");
+    }
   };
 
   return (

@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Category from "./Category";
 import axios from "axios";
 
 const Header = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
   const [maxCategories, setMaxCategories] = useState(0);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -19,17 +26,34 @@ const Header = () => {
     fetchCategories();
   }, []);
 
+  const onSearch = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (categoryId) {
+      return router.push(`/?category=${categoryId}&terms=${searchText}`);
+    }
+    router.push(`/?terms=${searchText}`);
+  };
+
   return (
     <header className="header">
       <div className="main-menu">
         <h1>
-          <Link href="/" className="button logo link-button">
+          <Link
+            href="/"
+            className="button logo link-button"
+            onClick={() => setSearchText("")}
+          >
             <span className="mobile-short-label">TGC</span>
             <span className="desktop-long-label">THE GOOD CORNER</span>
           </Link>
         </h1>
-        <form className="text-field-with-button">
-          <input className="text-field main-search-field" type="search" />
+        <form className="text-field-with-button" onSubmit={onSearch}>
+          <input
+            className="text-field main-search-field"
+            type="search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
           <button className="button button-primary">
             <svg
               aria-hidden="true"
@@ -46,11 +70,19 @@ const Header = () => {
             </svg>
           </button>
         </form>
-        <Link href="/category/new" className="button link-button">
+        <Link
+          href="/category/new"
+          className="button link-button"
+          onClick={() => setSearchText("")}
+        >
           <span className="mobile-short-label">Ajouter</span>
           <span className="desktop-long-label">Ajouter une catégorie</span>
         </Link>
-        <Link href="/ad/new" className="button link-button">
+        <Link
+          href="/ad/new"
+          className="button link-button"
+          onClick={() => setSearchText("")}
+        >
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>

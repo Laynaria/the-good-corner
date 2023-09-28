@@ -12,6 +12,7 @@ const RecentAds = () => {
 
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category");
+  const terms = searchParams.get("terms") ?? "";
 
   const handleClickPrice = (price: number) => {
     setTotalePrice(totalPrice + price);
@@ -20,8 +21,8 @@ const RecentAds = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/ad?categoryId=${categoryId}`
+        const res = await axios.get<Ad[]>(
+          `http://localhost:5000/ad?categoryId=${categoryId}&terms=${terms}`
         );
         setAds(res.data);
       } catch (err) {
@@ -30,7 +31,7 @@ const RecentAds = () => {
     };
 
     fetchData();
-  }, [categoryId]);
+  }, [categoryId, terms]);
 
   return (
     <>

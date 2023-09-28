@@ -25,6 +25,7 @@ const db = new sqlite3.Database("good_corner.sqlite");
 app.get("/ad", async (req: Request, res: Response) => {
   const categoryId: number = parseInt(req.query.categoryId as string);
   const tagName: string = req.query.tag as string;
+  const terms: string = req.query.terms ? (req.query.terms as string) : "";
 
   let ad: Ad[];
 
@@ -39,6 +40,7 @@ app.get("/ad", async (req: Request, res: Response) => {
         category: {
           id: categoryId,
         },
+        title: Like(`%${terms}%`),
       },
     });
     return res.send(ad);
@@ -51,6 +53,7 @@ app.get("/ad", async (req: Request, res: Response) => {
       },
       where: {
         tags: { name: tagName },
+        title: Like(`%${terms}%`),
       },
     });
     return res.send(ad);
@@ -65,6 +68,7 @@ app.get("/ad", async (req: Request, res: Response) => {
         category: {
           id: categoryId,
         },
+        title: Like(`%${terms}%`),
       },
     });
     return res.send(ad);
@@ -75,6 +79,7 @@ app.get("/ad", async (req: Request, res: Response) => {
       category: true,
       tags: true,
     },
+    where: { title: Like(`%${terms}%`) },
   });
   res.send(ad);
 });
