@@ -46,6 +46,10 @@ const Header = () => {
             </svg>
           </button>
         </form>
+        <Link href="/category/new" className="button link-button">
+          <span className="mobile-short-label">Ajouter</span>
+          <span className="desktop-long-label">Ajouter une catégorie</span>
+        </Link>
         <Link href="/ad/new" className="button link-button">
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>

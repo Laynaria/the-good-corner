@@ -242,6 +242,17 @@ app.get("/categories", async (req: Request, res: Response) => {
   res.send(categories);
 });
 
+// post categories
+app.post("/categories", (req: Request, res: Response) => {
+  const body = req.body;
+
+  const category = new Category();
+  category.name = body.name;
+
+  category.save();
+  res.send(category);
+});
+
 // get tags
 app.get("/tags", async (req: Request, res: Response) => {
   const terms = req.query.terms;

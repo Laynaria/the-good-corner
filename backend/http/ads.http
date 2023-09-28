@@ -66,3 +66,11 @@ GET http://localhost:5000/tags?terms=
 
 ### Delete Tags
 DELETE http://localhost:5000/tags/2
+
+### POST
+POST http://localhost:5000/categories
+Content-Type: application/json
+
+{
+    "name": "Plantes"
+}
