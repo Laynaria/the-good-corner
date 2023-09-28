@@ -3,7 +3,9 @@ export type Ad = {
   title: string;
   picture: string;
   description: string;
+  location: string;
   owner: string;
   price: number;
   createdAt: string;
+  category: { id: number };
 };

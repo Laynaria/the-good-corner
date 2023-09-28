@@ -20,6 +20,10 @@ const AdDetailComponent = () => {
     }
   }, [id]);
 
+  const handleEdit = () => {
+    router.push(`/ad/edit/${id}`);
+  };
+
   const handleClick = async () => {
     await axios.delete(`http://localhost:5000/ad/${id}`);
     router.push("/");
@@ -66,6 +70,9 @@ const AdDetailComponent = () => {
                 Envoyer un email
               </Link>
             </div>
+            <button className="button" onClick={handleEdit}>
+              Edit l&apos;annonce
+            </button>
             <button className="button" onClick={handleClick}>
               Supprimer l&apos;annonce
             </button>
