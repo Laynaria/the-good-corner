@@ -1,8 +1,70 @@
+import { DeleteResult, Like } from "typeorm";
 import { Ad } from "../entities/ad";
 import { Category } from "../entities/category";
 import { Tag } from "../entities/tag";
 
-export const findAll = () => {};
+export const findAll = async (
+  categoryId: number,
+  tagName: string,
+  terms: string
+): Promise<Ad[]> => {
+  let ad: Ad[];
+
+  if (tagName && categoryId) {
+    ad = await Ad.find({
+      relations: {
+        category: true,
+        tags: true,
+      },
+      where: {
+        tags: { name: tagName },
+        category: {
+          id: categoryId,
+        },
+        title: Like(`%${terms}%`),
+      },
+    });
+    return ad;
+  }
+
+  if (tagName) {
+    ad = await Ad.find({
+      relations: {
+        tags: true,
+      },
+      where: {
+        tags: { name: tagName },
+        title: Like(`%${terms}%`),
+      },
+    });
+    return ad;
+  }
+
+  if (categoryId) {
+    ad = await Ad.find({
+      relations: {
+        category: true,
+      },
+      where: {
+        category: {
+          id: categoryId,
+        },
+        title: Like(`%${terms}%`),
+      },
+    });
+    return ad;
+  }
+
+  ad = await Ad.find({
+    relations: {
+      category: true,
+      tags: true,
+    },
+    where: { title: Like(`%${terms}%`) },
+  });
+
+  return ad;
+};
 
 export const findById = (id: number): Promise<Ad | null> => {
   return Ad.findOne({
@@ -14,11 +76,12 @@ export const findById = (id: number): Promise<Ad | null> => {
   });
 };
 
+// trying to create a type instead of any
 // interface createBody extends Ad {
 //   category_id: number;
 // }
 
-export const create = async (body: any) => {
+export const create = async (body: any): Promise<Ad> => {
   const ad = new Ad();
   ad.title = body.title;
   ad.description = body.description;
@@ -55,7 +118,10 @@ export const create = async (body: any) => {
   return ad.save();
 };
 
-export const modify = async (body: any, id: number) => {
+export const modify = async (
+  body: any,
+  id: number
+): Promise<Ad | undefined> => {
   const ad = await Ad.findOneBy({ id });
 
   if (ad) {
@@ -94,4 +160,8 @@ export const modify = async (body: any, id: number) => {
 
     return ad;
   }
+};
+
+export const deleteAd = (id: number): Promise<DeleteResult> => {
+  return Ad.delete({ id: id });
 };

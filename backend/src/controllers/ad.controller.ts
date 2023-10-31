@@ -1,9 +1,5 @@
 import express, { Request, Response } from "express";
 import * as AdService from "../services/ad.service";
-import { Like } from "typeorm";
-import { Ad } from "../entities/ad";
-import { Tag } from "../entities/tag";
-import { Category } from "../entities/category";
 
 const router = express.Router();
 
@@ -13,61 +9,9 @@ router.get("/", async (req: Request, res: Response) => {
   const tagName: string = req.query.tag as string;
   const terms: string = req.query.terms ? (req.query.terms as string) : "";
 
-  let ad: Ad[];
+  const ad = await AdService.findAll(categoryId, tagName, terms);
 
-  if (tagName && categoryId) {
-    ad = await Ad.find({
-      relations: {
-        category: true,
-        tags: true,
-      },
-      where: {
-        tags: { name: tagName },
-        category: {
-          id: categoryId,
-        },
-        title: Like(`%${terms}%`),
-      },
-    });
-    return res.send(ad);
-  }
-
-  if (tagName) {
-    ad = await Ad.find({
-      relations: {
-        tags: true,
-      },
-      where: {
-        tags: { name: tagName },
-        title: Like(`%${terms}%`),
-      },
-    });
-    return res.send(ad);
-  }
-
-  if (categoryId) {
-    ad = await Ad.find({
-      relations: {
-        category: true,
-      },
-      where: {
-        category: {
-          id: categoryId,
-        },
-        title: Like(`%${terms}%`),
-      },
-    });
-    return res.send(ad);
-  }
-
-  ad = await Ad.find({
-    relations: {
-      category: true,
-      tags: true,
-    },
-    where: { title: Like(`%${terms}%`) },
-  });
-  res.send(ad);
+  return res.send(ad);
 });
 
 // Get By ID
@@ -104,7 +48,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  await Ad.delete({ id: id });
+  await AdService.deleteAd(id);
 
   res.sendStatus(204);
 });

@@ -2,7 +2,7 @@
 GET http://localhost:5000/ad
 
 ### GET ALL
-GET http://localhost:5000/ad?tag=voiture
+GET http://localhost:5000/ad?tag=bike
 
 ### GET ALL
 GET http://localhost:5000/ad?categoryId=3&tag=bike
@@ -11,7 +11,7 @@ GET http://localhost:5000/ad?categoryId=3&tag=bike
 GET http://localhost:5000/ad?categoryId=2
 
 ### GET By ID
-GET http://localhost:5000/ad/21
+GET http://localhost:5000/ad/1
 
 ### Get Clothes
 GET http://localhost:5000/ad-clothes
@@ -45,7 +45,7 @@ PUT http://localhost:5000/ad/1
 Content-Type: application/json
 
 {
-    "title": "Bike sold",
+    "title": "Bike sold Again 2",
     "description": "My bike is green, working fine. I'm selling it because I've got a new one",
     "owner": "bike.green.seller@gmail.com",
     "price": 150,
@@ -56,7 +56,7 @@ Content-Type: application/json
 }
 
 ### DELETE By ID
-DELETE http://localhost:5000/ad/21
+DELETE http://localhost:5000/ad/34
 
 ### Get Categories
 GET http://localhost:5000/categories?terms=vê
