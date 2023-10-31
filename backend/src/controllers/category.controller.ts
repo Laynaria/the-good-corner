@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
-import { Like } from "typeorm";
+import * as CategoryService from "../services/category.service";
+
 import { Category } from "../entities/category";
 
 const router = express.Router();
@@ -9,9 +10,7 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const terms = req.query.terms;
 
-  const categories = await Category.find({
-    where: { name: Like(`%${terms}%`) },
-  });
+  const categories = await CategoryService.findAll(terms);
   res.send(categories);
 });
 
@@ -19,10 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.post("/", (req: Request, res: Response) => {
   const body = req.body;
 
-  const category = new Category();
-  category.name = body.name;
-
-  category.save();
+  const category = CategoryService.create(body);
   res.send(category);
 });
 
