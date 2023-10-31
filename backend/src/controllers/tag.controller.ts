@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { Like } from "typeorm";
 import { Tag } from "../entities/tag";
+import * as TagService from "../services/tag.service";
 
 const router = express.Router();
 
@@ -8,9 +9,7 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const terms = req.query.terms;
 
-  const tags = await Tag.find({
-    where: { name: Like(`%${terms}%`) },
-  });
+  const tags = await TagService.findAll(terms);
   res.send(tags);
 });
 
@@ -18,7 +17,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  await Tag.delete({ id: id });
+  await TagService.deleteTag(id);
 
   res.sendStatus(204);
 });
