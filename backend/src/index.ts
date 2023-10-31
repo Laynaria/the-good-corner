@@ -3,6 +3,7 @@ import { dataSource } from "./config/db";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server";
 import { AdResolver } from "./resolvers/ad.resolver";
+import { CategoryResolver } from "./resolvers/category.resolver";
 
 const port: number = 5000;
 
@@ -10,7 +11,7 @@ const start = async () => {
   await dataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [AdResolver],
+    resolvers: [AdResolver, CategoryResolver],
     validate: { forbidUnknownValues: false },
   });
 
