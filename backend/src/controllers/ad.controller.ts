@@ -92,46 +92,12 @@ router.put("/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
   const body = req.body;
 
-  const ad = await Ad.findOneBy({ id });
-
-  if (ad) {
-    ad.title = body.title;
-    ad.description = body.description;
-    ad.owner = body.owner;
-    ad.price = body.price;
-    ad.picture = body.picture;
-    ad.location = body.location;
-
-    const category = await Category.findOneBy({ id: req.body.category_id });
-
-    if (category) {
-      ad.category = category;
-    }
-
-    const tagsName = body.tags;
-    if (tagsName && tagsName.length > 0) {
-      const tagsEntities: Tag[] = [];
-
-      for (const tagName of tagsName) {
-        let tag = await Tag.findOneBy({ name: tagName });
-
-        if (!tag) {
-          tag = new Tag();
-          tag.name = tagName;
-        }
-
-        tagsEntities.push(tag);
-      }
-
-      ad.tags = tagsEntities;
-    }
-
-    ad.save();
+  try {
+    const ad = await AdService.modify(body, id);
     res.send(ad);
-    return;
+  } catch (e) {
+    res.sendStatus(404);
   }
-
-  res.sendStatus(404);
 });
 
 // DELETE
