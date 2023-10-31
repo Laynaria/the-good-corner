@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import * as AdService from "../services/ad.service";
 import { Like } from "typeorm";
 import { Ad } from "../entities/ad";
 import { Tag } from "../entities/tag";
@@ -73,13 +74,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id);
 
-  const ad = await Ad.findOne({
-    relations: {
-      category: true,
-      tags: true,
-    },
-    where: { id: id },
-  });
+  const ad = await AdService.findById(id);
   res.send(ad);
 });
 
@@ -87,40 +82,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
   const body = req.body;
 
-  const ad = new Ad();
-  ad.title = body.title;
-  ad.description = body.description;
-  ad.owner = body.owner;
-  ad.price = body.price;
-  ad.picture = body.picture;
-  ad.location = body.location;
-  ad.createdAt = new Date();
-
-  const category = await Category.findOneBy({ id: req.body.category_id });
-
-  if (category) {
-    ad.category = category;
-  }
-
-  const tagsName = body.tags;
-  if (tagsName && tagsName.length > 0) {
-    const tagsEntities: Tag[] = [];
-
-    for (const tagName of tagsName) {
-      let tag = await Tag.findOneBy({ name: tagName });
-
-      if (!tag) {
-        tag = new Tag();
-        tag.name = tagName;
-      }
-
-      tagsEntities.push(tag);
-    }
-
-    ad.tags = tagsEntities;
-  }
-
-  ad.save();
+  const ad = await AdService.create(body);
 
   res.send(ad);
 });
