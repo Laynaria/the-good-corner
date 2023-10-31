@@ -6,7 +6,7 @@ import { CreateCategoryInputType } from "../types/CreateCategoryInputType";
 @Resolver(Category)
 export class CategoryResolver {
   @Query(() => [Category])
-  async categories(@Arg("terms") terms: string): Promise<Category[]> {
+  async getCategories(@Arg("terms") terms: string): Promise<Category[]> {
     return CategoryService.findAll(terms);
   }
 
