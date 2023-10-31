@@ -1,27 +1,27 @@
 import "reflect-metadata";
-import express, { Request, Response } from "express";
-import cors from "cors";
 import { dataSource } from "./config/db";
+import { buildSchema } from "type-graphql";
+import { ApolloServer } from "apollo-server";
+import { AdResolver } from "./resolvers/ad.resolver";
 
-import adController from "./controllers/ad.controller";
-import categoryController from "./controllers/category.controller";
-import tagController from "./controllers/tag.controller";
-
-const app = express();
 const port: number = 5000;
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
-app.use(express.json());
-
-app.use("/ad", adController);
-app.use("/categories", categoryController);
-app.use("/tags", tagController);
-
-app.listen(port, async () => {
+const start = async () => {
   await dataSource.initialize();
-  console.log(`Example app listening on port ${port}`);
-});
+
+  const schema = await buildSchema({
+    resolvers: [AdResolver],
+    validate: { forbidUnknownValues: false },
+  });
+
+  const server = new ApolloServer({ schema });
+
+  try {
+    const { url } = await server.listen({ port });
+    console.log(`Server running at ${url}`);
+  } catch (err) {
+    console.error("Error starting the server");
+  }
+};
+
+void start();

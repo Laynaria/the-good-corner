@@ -65,7 +65,7 @@ GET http://localhost:5000/categories?terms=vê
 GET http://localhost:5000/tags?terms=
 
 ### Delete Tags
-DELETE http://localhost:5000/tags/2
+DELETE http://localhost:5000/tags/10
 
 ### POST
 POST http://localhost:5000/categories

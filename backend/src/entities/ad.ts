@@ -7,32 +7,42 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
 import { Category } from "./category";
 import { Tag } from "./tag";
 
+@ObjectType()
 @Entity()
 export class Ad extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({ length: 100 })
   title: string;
 
+  @Field()
   @Column()
   description: string;
 
+  @Field()
   @Column({ length: 100 })
   owner: string;
 
+  @Field()
   @Column()
   price: number;
 
+  @Field()
   @Column({ length: 100 })
   picture: string;
 
+  @Field()
   @Column({ length: 100 })
   location: string;
 
+  @Field()
   @Column()
   createdAt: Date;
 
