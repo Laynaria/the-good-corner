@@ -1,9 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdCard from "./AdCard";
-import axios from "axios";
 import { Ad } from "@/types/ad.type";
 import { useSearchParams } from "next/navigation";
 import styles from "@/styles/RecentAds.module.css";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_ALL_ADS = gql`
+  query Query($categoryId: Float, $terms: String) {
+    getAllAd(categoryId: $categoryId, terms: $terms) {
+      price
+      title
+      picture
+      owner
+      location
+      description
+      id
+      createdAt
+    }
+  }
+`;
 
 const RecentAds = () => {
   const [totalPrice, setTotalePrice] = useState<number>(0);
@@ -14,24 +29,22 @@ const RecentAds = () => {
   const categoryId = searchParams.get("category");
   const terms = searchParams.get("terms") ?? "";
 
+  const { loading, error } = useQuery(GET_ALL_ADS, {
+    variables: {
+      categoryId: categoryId !== "" ? parseInt(categoryId as string) : null,
+      terms,
+    },
+    onCompleted: (data) => {
+      setAds(data.getAllAd);
+    },
+  });
+
   const handleClickPrice = (price: number) => {
     setTotalePrice(totalPrice + price);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get<Ad[]>(
-          `http://localhost:5000/ad?categoryId=${categoryId}&terms=${terms}`
-        );
-        setAds(res.data);
-      } catch (err) {
-        console.log("error", err);
-      }
-    };
-
-    fetchData();
-  }, [categoryId, terms]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error!</p>;
 
   return (
     <>
