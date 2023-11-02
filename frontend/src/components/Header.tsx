@@ -2,12 +2,22 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Category from "./Category";
-import axios from "axios";
+import CategoryLink from "./CategoryLink";
+import { gql, useQuery } from "@apollo/client";
+import { Category } from "@/types/category.type";
+
+const GET_ALL_CATEGORIES = gql`
+  query Query {
+    getCategories {
+      name
+      id
+    }
+  }
+`;
 
 const Header = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState<string>("");
+  const { data } = useQuery(GET_ALL_CATEGORIES);
   const [maxCategories, setMaxCategories] = useState(0);
 
   const router = useRouter();
@@ -15,16 +25,10 @@ const Header = () => {
   const categoryId = searchParams.get("category");
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await axios.get<Category[]>(
-        "http://localhost:5000/categories?terms="
-      );
-      setCategories(res.data);
-      setMaxCategories(res.data.length);
-    };
-
-    fetchCategories();
-  }, []);
+    if (data) {
+      setMaxCategories(data.getCategories.length);
+    }
+  }, [data]);
 
   const onSearch = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -88,8 +92,12 @@ const Header = () => {
         </Link>
       </div>
       <nav className="categories-navigation">
-        {categories.map((category) => (
-          <Category key={category.id} category={category} max={maxCategories} />
+        {data?.getCategories.map((category: Category) => (
+          <CategoryLink
+            key={category.id}
+            category={category}
+            max={maxCategories}
+          />
         ))}
       </nav>
     </header>

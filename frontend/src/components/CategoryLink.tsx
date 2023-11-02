@@ -7,7 +7,7 @@ type CategoryProps = {
   max: number;
 };
 
-const Category = ({ category, max }: CategoryProps) => {
+const CategoryLink = ({ category, max }: CategoryProps) => {
   const searchParams = useSearchParams();
   const terms = searchParams.get("terms") ?? "";
   return (
@@ -23,4 +23,4 @@ const Category = ({ category, max }: CategoryProps) => {
   );
 };
 
-export default Category;
+export default CategoryLink;

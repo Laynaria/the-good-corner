@@ -1,7 +1,7 @@
 import { Like } from "typeorm";
 import { Category } from "../entities/category";
 
-export const findAll = (terms: any): Promise<Category[]> => {
+export const findAll = (terms: any = ""): Promise<Category[]> => {
   return Category.find({
     where: { name: Like(`%${terms}%`) },
   });
