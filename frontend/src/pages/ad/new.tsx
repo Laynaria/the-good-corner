@@ -1,22 +1,35 @@
-import { useState, useEffect } from "react";
 import { Category } from "@/types/category.type";
-import axios from "axios";
 import { useRouter } from "next/router";
+import { gql, useMutation, useQuery } from "@apollo/client";
+
+const GET_ALL_CATEGORIES = gql`
+  query Query {
+    getCategories {
+      name
+      id
+    }
+  }
+`;
+
+const CREATE_AD = gql`
+  mutation CreateCategory($ad: CreateAdInputType!) {
+    createAd(ad: $ad) {
+      id
+      title
+      price
+      picture
+      owner
+      owner
+      location
+      description
+    }
+  }
+`;
 
 const NewAd = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data } = useQuery(GET_ALL_CATEGORIES);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await axios.get<Category[]>(
-        "http://localhost:5000/categories?terms="
-      );
-      setCategories(res.data);
-    };
-
-    fetchCategories();
-  }, []);
+  const [createAd] = useMutation(CREATE_AD);
 
   const onFormSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -25,8 +38,17 @@ const NewAd = () => {
     const formData = new FormData(form as HTMLFormElement);
 
     const formJson = Object.fromEntries(formData.entries());
-    await axios.post("http://localhost:5000/ad", formJson);
-    router.push("/");
+
+    createAd({
+      variables: {
+        ad: {
+          ...formJson,
+          price: parseInt(formJson.price as string),
+          categoryId: parseInt(formJson.categoryId as string),
+        },
+      },
+      onCompleted: () => router.push("/"),
+    });
   };
 
   return (
@@ -67,8 +89,8 @@ const NewAd = () => {
       <br />
 
       <label>
-        <select name="category_id">
-          {categories.map((category) => (
+        <select name="categoryId">
+          {data?.getCategories.map((category: Category) => (
             <option value={category.id} key={category.id}>
               {category.name}
             </option>

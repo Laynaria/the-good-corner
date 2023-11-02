@@ -50,7 +50,7 @@ export class Ad extends BaseEntity {
   @ManyToOne(() => Category)
   category: Category;
 
-  // @Field(() => [Tag])
+  @Field((type) => [Tag], { nullable: true })
   @ManyToMany(() => Tag, {
     cascade: ["insert"],
   })

@@ -62,7 +62,7 @@ const AdDetailComponent = () => {
   };
 
   if (loading || !ad) return <p>Loading...</p>;
-  if (error) return <p>Error :-(</p>;
+  if (error) return <p>Error!</p>;
 
   return (
     <>

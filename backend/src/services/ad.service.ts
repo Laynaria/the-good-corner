@@ -132,7 +132,7 @@ export const modify = async (
     ad.picture = body.picture;
     ad.location = body.location;
 
-    const category = await Category.findOneBy({ id: body.category_id });
+    const category = await Category.findOneBy({ id: body.categoryId });
 
     if (category) {
       ad.category = category;

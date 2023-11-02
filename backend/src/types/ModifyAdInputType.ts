@@ -26,6 +26,6 @@ export class ModifyAdInputType {
   @Field()
   categoryId: number;
 
-  @Field((type) => [String])
+  @Field((type) => [String], { nullable: true })
   tags: string[];
 }

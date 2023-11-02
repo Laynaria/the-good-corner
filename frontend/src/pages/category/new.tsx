@@ -1,18 +1,35 @@
-import axios from "axios";
+import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+
+const CREATE_CATEGORY = gql`
+  mutation CreateCategory($category: CreateCategoryInputType!) {
+    createCategory(category: $category) {
+      name
+      id
+    }
+  }
+`;
 
 const NewCategory = () => {
   const router = useRouter();
+  const [createCategory] = useMutation(CREATE_CATEGORY);
 
-  const onCategorySubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault;
+  const onCategorySubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
 
     const form = e.target;
     const formData = new FormData(form as HTMLFormElement);
 
     const formJson = Object.fromEntries(formData.entries());
-    await axios.post("http://localhost:5000/categories", formJson);
-    router.push("/");
+
+    createCategory({
+      variables: {
+        category: {
+          ...formJson,
+        },
+      },
+      onCompleted: () => router.push("/"),
+    });
   };
 
   return (
