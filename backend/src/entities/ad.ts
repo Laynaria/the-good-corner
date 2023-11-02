@@ -46,9 +46,11 @@ export class Ad extends BaseEntity {
   @Column()
   createdAt: Date;
 
+  @Field(() => Category)
   @ManyToOne(() => Category)
   category: Category;
 
+  // @Field(() => [Tag])
   @ManyToMany(() => Tag, {
     cascade: ["insert"],
   })

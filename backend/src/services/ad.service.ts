@@ -5,8 +5,8 @@ import { Tag } from "../entities/tag";
 
 export const findAll = async (
   categoryId: number,
-  tagName: string,
-  terms: string
+  tagName: string = "",
+  terms: string = ""
 ): Promise<Ad[]> => {
   let ad: Ad[];
 
