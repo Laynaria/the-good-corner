@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend/good_corner.sqlite:/app/good_corner.sqlite
+      - ./backend/src/:/app/src/:rw
+    environment:
+      - WATCHPACK_POLLING=true
+
+  frontend:
+    build: ./frontend
+    command: npm run dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src/:/app/src/:rw
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
