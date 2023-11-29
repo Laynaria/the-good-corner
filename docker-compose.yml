@@ -6,7 +6,7 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - ./backend/good_corner.sqlite:/app/good_corner.sqlite
+      - ./backend/package.json:/app/package.json
       - ./backend/src/:/app/src/:rw
     environment:
       - WATCHPACK_POLLING=true
@@ -22,3 +22,20 @@ services:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: good_corner_db
+      POSTGRES_USER: good-corner
+      POSTGRES_PASSWORD: supermdp
+      PGDATA: customDataFolder
+    volumes:
+      - ./dbData/:/var/lib/postgresql/data/customDataFolder
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
