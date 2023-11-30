@@ -6,10 +6,12 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - ./backend/package.json:/app/package.json
+      - ./backend/package.json:/app/package.json:rw
       - ./backend/src/:/app/src/:rw
     environment:
       - WATCHPACK_POLLING=true
+    depends_on:
+      - db
 
   frontend:
     build: ./frontend
@@ -18,13 +20,26 @@ services:
       - 3000:3000
     volumes:
       - ./frontend/src/:/app/src/:rw
+      - ./frontend/package.json:/app/package.json:rw
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
 
+  images:
+    build: ./images
+    ports:
+      - 8000:8000
+    volumes:
+      - ./images/src/:/app/src/:rw
+      - ./images/package.json:/app/package.json:rw
+      - ./images/uploads/:/app/uploads/
+    environment:
+      - WATCHPACK_POLLING=true
+
   db:
     image: postgres
+    restart: always
     environment:
       POSTGRES_DB: good_corner_db
       POSTGRES_USER: good-corner
@@ -34,6 +49,11 @@ services:
       - ./dbData/:/var/lib/postgresql/data/customDataFolder
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d good_corner_db -U good-corner"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   adminer:
     image: adminer
