@@ -1,6 +1,8 @@
 import { Category } from "@/types/category.type";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { PictureUpload } from "@/components/PictureUpload";
 
 const GET_ALL_CATEGORIES = gql`
   query Query {
@@ -30,9 +32,14 @@ const NewAd = () => {
   const { data } = useQuery(GET_ALL_CATEGORIES);
   const router = useRouter();
   const [createAd] = useMutation(CREATE_AD);
+  const [imgUrl, setImgUrl] = useState<string>("");
 
   const onFormSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    if (imgUrl === "") {
+      return;
+    }
 
     const form = e.target;
     const formData = new FormData(form as HTMLFormElement);
@@ -45,6 +52,7 @@ const NewAd = () => {
           ...formJson,
           price: parseInt(formJson.price as string),
           categoryId: parseInt(formJson.categoryId as string),
+          picture: imgUrl,
         },
       },
       onCompleted: () => router.push("/"),
@@ -52,62 +60,58 @@ const NewAd = () => {
   };
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <label>
-        Titre de l&apos;annonce
+    <section className="add_newAd">
+      <PictureUpload imgUrl={imgUrl} setImgUrl={setImgUrl} />
+      <form onSubmit={onFormSubmit}>
+        <label>
+          Titre de l&apos;annonce
+          <br />
+          <input className="text-field" name="title" type="text" />
+        </label>
         <br />
-        <input className="text-field" name="title" type="text" />
-      </label>
-      <br />
 
-      <label>
-        Prix de l&apos;annonce
+        <label>
+          Prix de l&apos;annonce
+          <br />
+          <input className="text-field" name="price" type="number" />
+        </label>
         <br />
-        <input className="text-field" name="price" type="number" />
-      </label>
-      <br />
 
-      <label>
-        Propriétaire de l&apos;annonce
+        <label>
+          Propriétaire de l&apos;annonce
+          <br />
+          <input className="text-field" name="owner" type="text" />
+        </label>
         <br />
-        <input className="text-field" name="owner" type="text" />
-      </label>
-      <br />
 
-      <label>
-        Image de l&apos;annonce
+        <label>
+          Ville de l&apos;annonce
+          <br />
+          <input className="text-field" name="location" type="text" />
+        </label>
         <br />
-        <input className="text-field" name="picture" type="url" />
-      </label>
-      <br />
 
-      <label>
-        Ville de l&apos;annonce
+        <label>
+          <select name="categoryId">
+            {data?.getCategories.map((category: Category) => (
+              <option value={category.id} key={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <br />
-        <input className="text-field" name="location" type="text" />
-      </label>
-      <br />
 
-      <label>
-        <select name="categoryId">
-          {data?.getCategories.map((category: Category) => (
-            <option value={category.id} key={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <br />
-
-      <label>
-        Description de l&apos;annonce
+        <label>
+          Description de l&apos;annonce
+          <br />
+          <textarea className="text-field" name="description" />
+        </label>
         <br />
-        <textarea className="text-field" name="description" />
-      </label>
-      <br />
 
-      <button className="button">Ajouter</button>
-    </form>
+        <button className="button">Ajouter</button>
+      </form>
+    </section>
   );
 };
 

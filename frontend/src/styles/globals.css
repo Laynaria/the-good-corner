@@ -173,6 +173,14 @@ h1 {
   .ad-details {
     grid-template-columns: 1fr 388px;
   }
+
+  .add_newAd {
+    display: flex;
+    gap: 5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15rem;
+  }
 }
 
 .ad-details-info {
