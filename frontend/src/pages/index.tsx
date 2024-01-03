@@ -1,10 +1,13 @@
 import RecentAds from "@/components/RecentAds";
+import isLogged from "@/components/secure/isLogged";
 import styles from "@/styles/Home.module.css";
 
-export default function Home() {
+function Home() {
   return (
     <>
       <RecentAds />
     </>
   );
 }
+
+export default isLogged(Home);

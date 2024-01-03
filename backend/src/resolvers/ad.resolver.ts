@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg, Mutation } from "type-graphql";
+import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
 import { Ad } from "../entities/ad";
 import * as AdService from "../services/ad.service";
 import { CreateAdInputType } from "../types/CreateAdInputType";
@@ -7,6 +7,7 @@ import { ModifyAdInputType } from "../types/ModifyAdInputType";
 @Resolver(Ad)
 export class AdResolver {
   @Query(() => [Ad])
+  @Authorized()
   getAllAd(
     @Arg("terms", { nullable: true }) terms: string,
     @Arg("categoryId", { nullable: true }) categoryId: number,
