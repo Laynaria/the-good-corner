@@ -34,7 +34,10 @@ export class AdResolver {
   }
 
   @Mutation(() => Ad)
-  updateAd(@Arg("ad") ad: ModifyAdInputType): Promise<Ad | undefined> {
+  updateAd(
+    @Arg("ad") ad: ModifyAdInputType,
+    @Ctx("user") user: User
+  ): Promise<Ad | undefined> {
     return AdService.modify(ad, ad.id);
   }
 
@@ -43,7 +46,12 @@ export class AdResolver {
     @Arg("id") id: number,
     @Ctx("user") user: User
   ): Promise<string> {
-    await AdService.deleteAd(id);
-    return `Ad deleted on id ${id}`;
+    const ad = await AdService.findById(id);
+
+    if (ad?.id === user.id || user.role === "ADMIN") {
+      await AdService.deleteAd(id);
+    }
+
+    return `OK`;
   }
 }
