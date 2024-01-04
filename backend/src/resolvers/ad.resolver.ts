@@ -1,8 +1,9 @@
-import { Resolver, Query, Arg, Mutation, Authorized } from "type-graphql";
+import { Resolver, Query, Arg, Mutation, Authorized, Ctx } from "type-graphql";
 import { Ad } from "../entities/ad";
 import * as AdService from "../services/ad.service";
 import { CreateAdInputType } from "../types/CreateAdInputType";
 import { ModifyAdInputType } from "../types/ModifyAdInputType";
+import { Context } from "apollo-server-core";
 
 @Resolver(Ad)
 export class AdResolver {
@@ -11,7 +12,8 @@ export class AdResolver {
   getAllAd(
     @Arg("terms", { nullable: true }) terms: string,
     @Arg("categoryId", { nullable: true }) categoryId: number,
-    @Arg("TagName", { nullable: true }) tagName: string
+    @Arg("TagName", { nullable: true }) tagName: string,
+    @Ctx() ctx: Context
   ): Promise<Ad[]> {
     return AdService.findAll(categoryId, tagName, terms);
   }
@@ -23,7 +25,7 @@ export class AdResolver {
 
   @Mutation(() => Ad)
   @Authorized()
-  createAd(@Arg("ad") ad: CreateAdInputType): Promise<Ad> {
+  createAd(@Arg("ad") ad: CreateAdInputType, @Ctx() ctx: Context): Promise<Ad> {
     return AdService.create({ ...ad });
   }
 
