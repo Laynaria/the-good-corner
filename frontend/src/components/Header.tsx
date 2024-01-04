@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -36,6 +36,12 @@ const Header = () => {
       return router.push(`/?category=${categoryId}&terms=${searchText}`);
     }
     router.push(`/?terms=${searchText}`);
+  };
+
+  const handleDisconnect = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    router.push("/signin");
   };
 
   return (
@@ -90,6 +96,13 @@ const Header = () => {
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
+        <button
+          className="button link-button"
+          onClick={(e) => handleDisconnect(e)}
+        >
+          <span className="mobile-short-label">Déconnexion</span>
+          <span className="desktop-long-label">Déconnexion</span>
+        </button>
       </div>
       <nav className="categories-navigation">
         {data?.getCategories.map((category: Category) => (
