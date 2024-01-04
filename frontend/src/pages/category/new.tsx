@@ -1,3 +1,4 @@
+import isAdmin from "@/components/secure/isAdmin";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 
@@ -45,4 +46,4 @@ const NewCategory = () => {
   );
 };
 
-export default NewCategory;
+export default isAdmin(NewCategory);
