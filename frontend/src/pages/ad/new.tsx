@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { PictureUpload } from "@/components/PictureUpload";
+import isLogged from "@/components/secure/isLogged";
 
 const GET_ALL_CATEGORIES = gql`
   query Query {
@@ -115,4 +116,4 @@ const NewAd = () => {
   );
 };
 
-export default NewAd;
+export default isLogged(NewAd);

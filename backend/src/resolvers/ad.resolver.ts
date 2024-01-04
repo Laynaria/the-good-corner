@@ -22,6 +22,7 @@ export class AdResolver {
   }
 
   @Mutation(() => Ad)
+  @Authorized()
   createAd(@Arg("ad") ad: CreateAdInputType): Promise<Ad> {
     return AdService.create({ ...ad });
   }
