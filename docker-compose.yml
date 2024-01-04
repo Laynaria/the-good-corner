@@ -9,7 +9,6 @@ services:
       - ./backend/package.json:/app/package.json:rw
       - ./backend/.env:/app/.env:rw
       - ./backend/src/:/app/src/:rw
-      # - ./backend/node_modules:/app/node_modules
     environment:
       - WATCHPACK_POLLING=true
     depends_on:
@@ -22,6 +21,7 @@ services:
       - 3000:3000
     volumes:
       - ./frontend/src/:/app/src/:rw
+      - ./backend/.env:/app/.env:rw
       - ./frontend/package.json:/app/package.json:rw
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
