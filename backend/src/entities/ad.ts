@@ -10,6 +10,7 @@ import {
 import { Field, ObjectType } from "type-graphql";
 import { Category } from "./category";
 import { Tag } from "./tag";
+import { User } from "./user";
 
 @ObjectType()
 @Entity()
@@ -49,6 +50,9 @@ export class Ad extends BaseEntity {
   @Field(() => Category)
   @ManyToOne(() => Category)
   category: Category;
+
+  @ManyToOne(() => User)
+  user: User;
 
   @Field((type) => [Tag], { nullable: true })
   @ManyToMany(() => Tag, {

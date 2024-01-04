@@ -2,6 +2,7 @@ import { DeleteResult, Like } from "typeorm";
 import { Ad } from "../entities/ad";
 import { Category } from "../entities/category";
 import { Tag } from "../entities/tag";
+import { User } from "../entities/user";
 
 export const findAll = async (
   categoryId: number,
@@ -89,6 +90,7 @@ export const create = async (body: any): Promise<Ad> => {
   ad.price = body.price;
   ad.picture = body.picture;
   ad.location = body.location;
+  ad.user = body.user;
   ad.createdAt = new Date();
 
   const category = await Category.findOneBy({ id: body.category_id });
