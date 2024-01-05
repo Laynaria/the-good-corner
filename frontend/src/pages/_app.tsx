@@ -6,11 +6,13 @@ import {
   ApolloProvider,
   InMemoryCache,
   createHttpLink,
+  from,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { onError } from "@apollo/client/link/error";
 
 // function to recreate an uri object for apollo which is needed when using link instead of uri
 const httpLink = createHttpLink({
@@ -30,9 +32,22 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors, operation }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach((err) => {
+      if (err.extensions.code === "UNAUTHENTICATED") {
+        localStorage.removeItem("token");
+        location.replace("/signin");
+      }
+    });
+  }
+});
+
 const client = new ApolloClient({
   // we concat the headers with the new uri to create automatically our requests with our token, sending automatically our token to the backend when using a query/mutation
-  link: authLink.concat(httpLink),
+  // we use from, with an array of link to send token to our back, check if there was the graphql error or not, and redirect us in case something isn't right
+  // link: authLink.concat(from([errorLink, httpLink])),
+  link: from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
 });
 
