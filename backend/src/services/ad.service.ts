@@ -71,6 +71,7 @@ export const findById = (id: number): Promise<Ad | null> => {
   return Ad.findOne({
     relations: {
       category: true,
+      user: true,
       tags: true,
     },
     where: { id: id },

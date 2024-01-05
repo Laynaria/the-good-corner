@@ -34,11 +34,18 @@ export class AdResolver {
   }
 
   @Mutation(() => Ad)
-  updateAd(
+  @Authorized()
+  async updateAd(
     @Arg("ad") ad: ModifyAdInputType,
     @Ctx("user") user: User
   ): Promise<Ad | undefined> {
-    return AdService.modify(ad, ad.id);
+    const checkAd = await AdService.findById(ad.id);
+
+    if (checkAd?.user.id === user.id || user.role === "ADMIN") {
+      return AdService.modify(ad, ad.id);
+    }
+
+    return undefined;
   }
 
   @Mutation(() => String)
@@ -48,7 +55,7 @@ export class AdResolver {
   ): Promise<string> {
     const ad = await AdService.findById(id);
 
-    if (ad?.id === user.id || user.role === "ADMIN") {
+    if (ad?.user.id === user.id || user.role === "ADMIN") {
       await AdService.deleteAd(id);
     }
 

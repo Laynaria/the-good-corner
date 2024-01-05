@@ -100,19 +100,6 @@ const NewAd = () => {
 
     const formJson = Object.fromEntries(formData.entries());
 
-    console.log({
-      ad: {
-        id: Number(id),
-        title: formJson.title,
-        price: parseInt(formJson.price as string),
-        owner: formJson.owner,
-        picture: formJson.picture,
-        location: formJson.location,
-        categoryId: parseInt(formJson.category as string),
-        description: formJson.description,
-      },
-    });
-
     editAd({
       variables: {
         ad: {
