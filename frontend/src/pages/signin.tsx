@@ -1,6 +1,7 @@
+import { AuthContext } from "@/contexts/authContext";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const SIGN_IN = gql`
   mutation Mutation($password: String!, $email: String!) {
@@ -9,6 +10,7 @@ const SIGN_IN = gql`
 `;
 
 export default function SignIn() {
+  const { setAuthenticated } = useContext(AuthContext);
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -28,6 +30,7 @@ export default function SignIn() {
     },
     onCompleted(data: any) {
       localStorage.setItem("token", data.signIn);
+      setAuthenticated(true);
       router.push("/");
     },
   });

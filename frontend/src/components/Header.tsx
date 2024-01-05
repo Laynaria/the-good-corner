@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import CategoryLink from "./CategoryLink";
 import { gql, useQuery } from "@apollo/client";
 import { Category } from "@/types/category.type";
+import { AuthContext } from "@/contexts/authContext";
 
 const GET_ALL_CATEGORIES = gql`
   query Query {
@@ -16,6 +17,7 @@ const GET_ALL_CATEGORIES = gql`
 `;
 
 const Header = () => {
+  const { authenticated, setAuthenticated } = useContext(AuthContext);
   const [searchText, setSearchText] = useState<string>("");
   const { data } = useQuery(GET_ALL_CATEGORIES);
   const [maxCategories, setMaxCategories] = useState(0);
@@ -41,6 +43,7 @@ const Header = () => {
   const handleDisconnect = (e: React.SyntheticEvent) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    setAuthenticated(false);
     router.push("/signin");
   };
 
@@ -96,13 +99,23 @@ const Header = () => {
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
-        <button
-          className="button link-button"
-          onClick={(e) => handleDisconnect(e)}
-        >
-          <span className="mobile-short-label">Déconnexion</span>
-          <span className="desktop-long-label">Déconnexion</span>
-        </button>
+        {authenticated ? (
+          <button
+            className="button link-button"
+            onClick={(e) => handleDisconnect(e)}
+          >
+            <span className="mobile-short-label">Déconnexion</span>
+            <span className="desktop-long-label">Déconnexion</span>
+          </button>
+        ) : (
+          <button
+            className="button link-button"
+            onClick={() => router.push("/signin")}
+          >
+            <span className="mobile-short-label">Connexion</span>
+            <span className="desktop-long-label">Connexion</span>
+          </button>
+        )}
       </div>
       <nav className="categories-navigation">
         {data?.getCategories.map((category: Category) => (

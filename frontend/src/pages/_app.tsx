@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { AuthContext } from "@/contexts/authContext";
 import "@/styles/globals.css";
 import {
   ApolloClient,
@@ -9,6 +10,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 // function to recreate an uri object for apollo which is needed when using link instead of uri
 const httpLink = createHttpLink({
@@ -35,11 +37,22 @@ const client = new ApolloClient({
 });
 
 function App({ Component, pageProps }: AppProps) {
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      setAuthenticated(true);
+    }
+  }, []);
+
   return (
     <ApolloProvider client={client}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <AuthContext.Provider value={{ authenticated, setAuthenticated }}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AuthContext.Provider>
     </ApolloProvider>
   );
 }
