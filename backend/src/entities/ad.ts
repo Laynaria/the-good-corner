@@ -51,6 +51,7 @@ export class Ad extends BaseEntity {
   @ManyToOne(() => Category)
   category: Category;
 
+  @Field(() => User)
   @ManyToOne(() => User)
   user: User;
 

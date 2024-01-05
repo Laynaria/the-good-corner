@@ -8,4 +8,5 @@ export type Ad = {
   price: number;
   createdAt: string;
   category: { id: number };
+  user: { id: number };
 };

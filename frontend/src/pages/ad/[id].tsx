@@ -3,6 +3,7 @@ import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const GET_ADD_BY_ID = gql`
   query GetAdById($getAdByIdId: Float!) {
@@ -15,6 +16,9 @@ const GET_ADD_BY_ID = gql`
       id
       description
       createdAt
+      user {
+        id
+      }
     }
   }
 `;
@@ -27,8 +31,21 @@ const DELETE_ADD = gql`
 
 const AdDetailComponent = () => {
   const router = useRouter();
+  const [user, setUser] = useState<{ id: number; role: string }>({
+    id: 0,
+    role: "",
+  });
   const { id } = router.query;
   const [ad, setAd] = useState<Ad | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const payload: any = jwtDecode(token);
+      setUser(payload);
+    }
+  }, []);
 
   const [getAd, { loading, error }] = useLazyQuery(GET_ADD_BY_ID, {
     variables: {
@@ -101,12 +118,18 @@ const AdDetailComponent = () => {
             Envoyer un email
           </Link>
         </div>
-        <button className="button" onClick={handleEdit}>
-          Edit l&apos;annonce
-        </button>
-        <button className="button" onClick={handleDelete}>
-          Supprimer l&apos;annonce
-        </button>
+        {ad.user.id === user.id || user.role === "ADMIN" ? (
+          <>
+            <button className="button" onClick={handleEdit}>
+              Edit l&apos;annonce
+            </button>
+            <button className="button" onClick={handleDelete}>
+              Supprimer l&apos;annonce
+            </button>
+          </>
+        ) : (
+          ""
+        )}
       </section>
     </>
   );

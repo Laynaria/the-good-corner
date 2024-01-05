@@ -15,6 +15,7 @@ export async function signIn(email: string, password: string) {
       const token = signJwt({
         email: user.email,
         role: user.role,
+        id: user.id,
       });
 
       return token;
